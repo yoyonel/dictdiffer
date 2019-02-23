@@ -10,14 +10,12 @@
 # it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-from collections import OrderedDict
 import unittest
+from collections import OrderedDict
 
-from dictdiffer import (
-    HAS_NUMPY, diff, dot_lookup, patch, revert, swap,
-    make_raw_ignore_key)
+from dictdiffer import HAS_NUMPY, diff, dot_lookup, patch, revert, swap
 from dictdiffer._compat import MutableMapping, MutableSequence, MutableSet
-from dictdiffer.utils import PathLimit
+from dictdiffer.utils import PathLimit, make_raw_ignore_key
 
 if not hasattr(unittest, 'skipIf'):
     import unittest2 as unittest  # Python 2.6 support

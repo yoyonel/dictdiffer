@@ -16,7 +16,9 @@ import pkg_resources
 
 from ._compat import (PY2, Iterable, MutableMapping, MutableSequence,
                       MutableSet, string_types, text_type)
-from .utils import EPSILON, PathLimit, are_different, dot_lookup
+from .utils import (
+    EPSILON, PathLimit, are_different, dot_lookup,
+    RAW_IGNORE_KEY_TOKEN)
 from .version import __version__
 
 (ADD, REMOVE, CHANGE) = (
@@ -38,20 +40,6 @@ else:
     import numpy
 
     LIST_TYPES += (numpy.ndarray, )
-
-
-RAW_IGNORE_KEY_TOKEN = '\\.'
-
-
-def make_raw_ignore_key(key):
-    """
-
-    :param key:
-    :type key: str
-    :return:
-    :rtype: str
-    """
-    return RAW_IGNORE_KEY_TOKEN + key
 
 
 def diff(first, second, node=None, ignore=None, path_limit=None, expand=False,

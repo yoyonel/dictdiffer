@@ -14,6 +14,7 @@ import sys
 from ._compat import izip_longest, num_types, string_types
 
 EPSILON = sys.float_info.epsilon
+RAW_IGNORE_KEY_TOKEN = '\\.'
 
 
 class WildcardDict(dict):
@@ -273,3 +274,8 @@ def are_different(first, second, tolerance):
         return abs(first-second) > tolerance * max(abs(first), abs(second))
     # we got different values
     return True
+
+
+def make_raw_ignore_key(key):
+    """Generate a raw ignore key."""
+    return RAW_IGNORE_KEY_TOKEN + key
