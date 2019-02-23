@@ -13,7 +13,9 @@
 from collections import OrderedDict
 import unittest
 
-from dictdiffer import HAS_NUMPY, diff, dot_lookup, patch, revert, swap
+from dictdiffer import (
+    HAS_NUMPY, diff, dot_lookup, patch, revert, swap,
+    make_raw_ignore_key)
 from dictdiffer._compat import MutableMapping, MutableSequence, MutableSet
 from dictdiffer.utils import PathLimit
 
@@ -281,16 +283,19 @@ class DictDifferTests(unittest.TestCase):
         diffed = next(diff(first, second, ignore=['a.aa']))
         assert ('change', 'a.ac', ('C', 3)) == diffed
 
+    def test_ignore_dotted_key_disable(self):
+        key_to_ignore = u'nifi.zookeeper.session.timeout'
         config_dict = OrderedDict(
             [('address', 'devops011-slv-01.gvs.ggn'),
-             ('nifi.zookeeper.session.timeout', '3 secs')])
+             (key_to_ignore, '3 secs')])
 
         ref_dict = OrderedDict(
             [('address', 'devops011-slv-01.gvs.ggn'),
-             ('nifi.zookeeper.session.timeout', '4 secs')])
+             (key_to_ignore, '4 secs')])
 
-        assert [] == list(diff(config_dict, ref_dict,
-                               ignore={'nifi.zookeeper.session.timeout'}))
+        assert len(
+            list(diff(config_dict, ref_dict,
+                      ignore=[make_raw_ignore_key(key_to_ignore)]))) == 0
 
     def test_ignore_with_unicode_sub_keys(self):
         first = {u'a': {u'aא': {u'aa': 'A'}}}

@@ -40,6 +40,20 @@ else:
     LIST_TYPES += (numpy.ndarray, )
 
 
+RAW_IGNORE_KEY_TOKEN = '\\.'
+
+
+def make_raw_ignore_key(key):
+    """
+
+    :param key:
+    :type key: str
+    :return:
+    :rtype: str
+    """
+    return RAW_IGNORE_KEY_TOKEN + key
+
+
 def diff(first, second, node=None, ignore=None, path_limit=None, expand=False,
          tolerance=EPSILON):
     """Compare two dictionary/list/set objects, and returns a diff result.
@@ -118,11 +132,19 @@ def diff(first, second, node=None, ignore=None, path_limit=None, expand=False,
         path_limit = PathLimit(path_limit)
 
     if isinstance(ignore, Iterable):
+        def _unmake_raw_ignore_key(key):
+            return key[len(RAW_IGNORE_KEY_TOKEN):]
+
+        def _is_raw_ignore_key(key):
+            return key.startswith(RAW_IGNORE_KEY_TOKEN)
+
         def _process_ignore_value(value):
             if isinstance(value, int):
                 return value,
             elif isinstance(value, list):
                 return tuple(value)
+            elif isinstance(value, string_types) and _is_raw_ignore_key(value):
+                return _unmake_raw_ignore_key(value),
             return value
 
         ignore = type(ignore)(_process_ignore_value(value) for value in ignore)
